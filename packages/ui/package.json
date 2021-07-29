@@ -1,6 +1,6 @@
 {
 	"name": "@lytejs/ui",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "LyteJS UI",
 	"keywords": [
 		"Light",
@@ -34,7 +34,7 @@
 	"bugs": {
 		"url": "https://github.com/bugwheels94/lytejs/issues"
 	},
-	"gitHead": "4dab7f3724fd1d3f9dd7a64d313ebe3e9851acd8",
+	"gitHead": "a0f4e2fcb353383631a7345b18f76bed3d53983e",
 	"devDependencies": {
 		"@babel/cli": "^7.14.8",
 		"@babel/core": "^7.14.8",

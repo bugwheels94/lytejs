@@ -1,6 +1,6 @@
 {
 	"name": "@lytejs/query-string",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "A Query String Parser that actually works",
 	"keywords": [
 		"LightWeight",
@@ -53,5 +53,5 @@
 		"@babel/runtime": "^7.14.8",
 		"rollup-plugin-peer-deps-external": "^2.2.4"
 	},
-	"gitHead": "4dab7f3724fd1d3f9dd7a64d313ebe3e9851acd8"
+	"gitHead": "a0f4e2fcb353383631a7345b18f76bed3d53983e"
 }
