@@ -1,0 +1,14 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"declarationDir": "./types",
+		"emitDeclarationOnly": true,
+		"noEmit": false,
+		"paths": {
+			"lite-ui": ["./components/index.ts"]
+		}
+	},
+	"files": ["./components/index.ts"],
+	"exclude": ["./src/**/*"]
+}

@@ -1,2 +1,5 @@
 packages/*/lib
 packages/*/es
+packages/*/types
+packages/*/umd
+node_modules
