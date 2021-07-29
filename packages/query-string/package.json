@@ -11,7 +11,9 @@
 	"author": "bugwheels94 <bugwheels94@gmail.com>",
 	"homepage": "https://github.com/bugwheels94/lytejs#readme",
 	"license": "ISC",
-	"main": "lib/query-string.js",
+	"main": "lib/index.js",
+	"module": "es/index.js",
+	"types": "types/index.d.ts",
 	"directories": {
 		"lib": "lib",
 		"test": "__tests__"
@@ -50,5 +52,6 @@
 	"dependencies": {
 		"@babel/runtime": "^7.14.8",
 		"rollup-plugin-peer-deps-external": "^2.2.4"
-	}
+	},
+	"gitHead": "4dab7f3724fd1d3f9dd7a64d313ebe3e9851acd8"
 }

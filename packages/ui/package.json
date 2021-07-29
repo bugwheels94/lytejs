@@ -34,7 +34,7 @@
 	"bugs": {
 		"url": "https://github.com/bugwheels94/lytejs/issues"
 	},
-	"gitHead": "a7dbbeb3cdc51b2b75856d23dffe28e2634bc9da",
+	"gitHead": "4dab7f3724fd1d3f9dd7a64d313ebe3e9851acd8",
 	"devDependencies": {
 		"@babel/cli": "^7.14.8",
 		"@babel/core": "^7.14.8",
