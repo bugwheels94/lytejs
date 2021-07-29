@@ -53,5 +53,8 @@
 		"@babel/runtime": "^7.14.8",
 		"rollup-plugin-peer-deps-external": "^2.2.4"
 	},
-	"gitHead": "a0f4e2fcb353383631a7345b18f76bed3d53983e"
+	"gitHead": "d70e5917e1b037e7b6bcb63b7ac30ef548a04fdf",
+	"publishConfig": {
+		"access": "public"
+	}
 }
