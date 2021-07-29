@@ -22,7 +22,10 @@
 		"test": "__tests__"
 	},
 	"files": [
-		"lib"
+		"lib",
+		"es",
+		"types",
+		"umd"
 	],
 	"repository": {
 		"type": "git",
