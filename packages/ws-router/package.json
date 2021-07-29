@@ -14,6 +14,9 @@
 	"types": "types/index.d.ts",
 	"directories": {
 		"lib": "lib",
+		"es": "es",
+		"types": "types",
+		"umd": "umd",
 		"test": "__tests__"
 	},
 	"files": [
