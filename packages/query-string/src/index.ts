@@ -1,5 +1,5 @@
 interface obj {
-	[s: string]: string | number | boolean | Array<obj> | Record<string, obj> | undefined;
+	[s: string]: string | number | boolean | Array<obj> | undefined | obj;
 }
 export const stringify = (params: obj) =>
 	Object.keys(params)
@@ -32,7 +32,6 @@ export const parse = (query: string = '') => {
 		}
 		if (query[0].endsWith('[]')) {
 			const key = query[0].slice(0, -2);
-			console.log(query[0], key);
 			acc[key] = acc[key] || [];
 			acc[key].push(finalValue);
 		} else acc[query[0]] = finalValue;
