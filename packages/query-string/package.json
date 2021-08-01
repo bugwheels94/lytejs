@@ -1,6 +1,6 @@
 {
 	"name": "@lytejs/query-string",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"description": "A Query String Parser that actually works",
 	"keywords": [
 		"LightWeight",
