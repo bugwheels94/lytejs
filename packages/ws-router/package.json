@@ -46,5 +46,8 @@
 	"gitHead": "d70e5917e1b037e7b6bcb63b7ac30ef548a04fdf",
 	"publishConfig": {
 		"access": "public"
+	},
+	"devDependencies": {
+		"rollup-plugin-terser": "^7.0.2"
 	}
 }

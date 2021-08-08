@@ -1,19 +1,14 @@
 {
-	"name": "@lytejs/query-string",
+	"name": "@lytejs/react-fetch",
 	"version": "0.2.8",
-	"description": "A Query String Parser that actually works",
+	"description": "SWR on steroids",
 	"keywords": [
-		"LightWeight",
-		"Query",
-		"String",
-		"Parser"
+		"SWR"
 	],
 	"author": "bugwheels94 <bugwheels94@gmail.com>",
 	"homepage": "https://github.com/bugwheels94/lytejs#readme",
 	"license": "ISC",
 	"main": "lib/index.js",
-	"module": "es/index.js",
-	"types": "types/index.d.ts",
 	"directories": {
 		"lib": "lib",
 		"es": "es",
@@ -43,9 +38,11 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.14.8",
-		"rollup-plugin-peer-deps-external": "^2.2.4"
+		"dequal": "^2.0.2",
+		"react": "^17.0.2",
+		"rollup-plugin-peer-deps-external": "^2.2.4",
+		"swr": "^0.5.6"
 	},
-	"gitHead": "d70e5917e1b037e7b6bcb63b7ac30ef548a04fdf",
 	"publishConfig": {
 		"access": "public"
 	},
