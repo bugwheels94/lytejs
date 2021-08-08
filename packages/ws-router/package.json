@@ -1,6 +1,6 @@
 {
 	"name": "@lytejs/ws-router",
-	"version": "0.2.9",
+	"version": "0.2.12",
 	"description": "HTTP like routing for Websockets ",
 	"keywords": [
 		"Websockets",
