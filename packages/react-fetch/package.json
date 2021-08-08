@@ -1,6 +1,6 @@
 {
 	"name": "@lytejs/react-fetch",
-	"version": "0.2.13",
+	"version": "0.2.14",
 	"description": "SWR on steroids",
 	"keywords": [
 		"SWR"
