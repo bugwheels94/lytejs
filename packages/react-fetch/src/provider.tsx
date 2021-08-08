@@ -1,5 +1,4 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
-import { SWRConfig, SWRConfiguration } from 'swr';
 type fulfilled = { id: string; data: any };
 const defaultContext = {
 	store: {} as Record<string, any>,
@@ -23,7 +22,7 @@ const defaultContext = {
 	setStore: (_: any) => {},
 };
 export const SwrPlusContext = React.createContext(defaultContext);
-export const SwrPlusProvider = ({ children, value }: { children: ReactNode; value: SWRConfiguration }) => {
+export const SwrPlusProvider = ({ children }: { children: ReactNode }) => {
 	const [mounted, setMounted] = useState<Record<string, number>>({});
 	const [store, setStore] = useState<Record<string, any>>({});
 	const [pending, setPending] = useState<string[]>([]);
@@ -113,9 +112,5 @@ export const SwrPlusProvider = ({ children, value }: { children: ReactNode; valu
 		}),
 		[]
 	);
-	return (
-		<SwrPlusContext.Provider value={contextValue}>
-			<SWRConfig value={value}>{children}</SWRConfig>
-		</SwrPlusContext.Provider>
-	);
+	return <SwrPlusContext.Provider value={contextValue}>{children}</SwrPlusContext.Provider>;
 };
