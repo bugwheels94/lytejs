@@ -23,12 +23,14 @@ export const useQuery = (
 		hideGlobalLoader = false,
 		hideGlobalError = false,
 		refetchOnMount = false,
+		keepPreviousData = false,
 	}: {
 		onSuccess?: (_: any) => void;
 		onError?: (_: any) => void;
 		hideGlobalLoader?: boolean;
 		hideGlobalError?: boolean;
 		refetchOnMount?: boolean;
+		keepPreviousData?: true;
 	}
 ) => {
 	// use them because these 4 states are local
