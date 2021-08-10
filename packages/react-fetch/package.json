@@ -49,7 +49,28 @@
 	"peerDependencies": {
 		"react": "^17.0.2"
 	},
+	"eslintConfig": {
+		"root": true,
+		"parser": "@typescript-eslint/parser",
+		"plugins": [
+			"@typescript-eslint"
+		],
+		"ignorePatterns": [
+			"node_modules/"
+		],
+		"extends": "react-app"
+	},
 	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^4.29.1",
+		"@typescript-eslint/parser": "^4.29.1",
+		"babel-eslint": "^10.1.0",
+		"eslint": "^7.32.0",
+		"eslint-config-react-app": "^6.0.0",
+		"eslint-plugin-flowtype": "^5.9.0",
+		"eslint-plugin-import": "^2.24.0",
+		"eslint-plugin-jsx-a11y": "^6.4.1",
+		"eslint-plugin-react": "^7.24.0",
+		"eslint-plugin-react-hooks": "^4.2.0",
 		"rollup-plugin-terser": "^7.0.2"
 	}
 }

@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 type fulfilled = { id: string; data: any };
 const defaultContext = {
 	store: {} as Record<string, any>,
@@ -23,7 +23,7 @@ const defaultContext = {
 };
 export const SwrPlusContext = React.createContext(defaultContext);
 export const SwrPlusProvider = ({ children }: { children: ReactNode }) => {
-	const [mounted, setMounted] = useState<Record<string, number>>({});
+	const mounted = useRef<Record<string, number>>({});
 	const [store, setStore] = useState<Record<string, any>>({});
 	const [pending, setPending] = useState<string[]>([]);
 	const [validating, setValidating] = useState<string[]>([]);
@@ -33,53 +33,69 @@ export const SwrPlusProvider = ({ children }: { children: ReactNode }) => {
 	const [globalErrorBlackList, setGlobalErrorBlackList] = useState({});
 	const registerMount = useCallback(
 		(key: string) => {
-			mounted[key] = (mounted[key] || 0) + 1;
-			setMounted(mounted);
+			console.log('Will Register Mount', key, ' into ', mounted);
+			mounted.current[key] = (mounted.current[key] || 0) + 1;
+			console.log('Registered Mount', key, ' into ', mounted);
 		},
 		[mounted]
+	);
+	const reset = useCallback(
+		(key: string) => {
+			setFulfilled(fulfilled.filter(({ id }) => key !== id));
+			setPending(pending.filter((p) => key !== p));
+			setValidating(validating.filter((p) => key !== p));
+			setRejected(rejected.filter((r) => key !== r.id));
+		},
+		[fulfilled, pending, rejected, validating]
 	);
 
 	const unregisterMount = useCallback(
 		(key: string) => {
-			const result = mounted[key];
+			const result = mounted.current[key];
 			if (!result) return;
-			if (result > 1) mounted[key] = result - 1;
+			if (result > 1) mounted.current[key] = result - 1;
 			else {
-				delete mounted[key];
+				delete mounted.current[key];
 				reset(key);
 			}
-			setMounted(mounted);
 		},
-		[mounted]
+		[mounted, reset]
 	);
-	const registerPending = useCallback((key: string) => {
-		if (!mounted[key]) return; // halt if the component unmounted in mid of the API call
-		setRejected(rejected.filter((r) => key !== r.id));
-		setFulfilled(fulfilled.filter(({ id }) => key !== id));
-		setPending(pending.concat(key));
-	}, []);
-	const registerValidating = useCallback((key: string) => {
-		if (!mounted[key]) return; // halt if the component unmounted in mid of the API call
-		setValidating(pending.concat(key));
-	}, []);
-	const registerRejected = useCallback((key: { id: string; reason: string }) => {
-		if (!mounted[key.id]) return; // halt if the component unmounted in mid of the API call
-		setRejected([key, ...rejected]);
-		setValidating(validating.filter((p) => key.id !== p));
-		setPending(pending.filter((req) => req !== key.id));
-	}, []);
-	const registerFulfilled = useCallback((key: fulfilled) => {
-		if (!mounted[key.id]) return; // halt if the component unmounted in mid of the API call
-		setFulfilled([key, ...fulfilled]);
-		setValidating(validating.filter((p) => key.id !== p));
-		setPending(pending.filter((req) => req !== key.id));
-	}, []);
-	const reset = useCallback((key: string) => {
-		setFulfilled(fulfilled.filter(({ id }) => key !== id));
-		setPending(pending.filter((p) => key !== p));
-		setValidating(validating.filter((p) => key !== p));
-		setRejected(rejected.filter((r) => key !== r.id));
-	}, []);
+	const registerPending = useCallback(
+		(key: string) => {
+			if (!mounted.current[key]) return; // halt if the component unmounted in mid of the API call
+			setRejected(rejected.filter((r) => key !== r.id));
+			setFulfilled(fulfilled.filter(({ id }) => key !== id));
+			setPending(pending.concat(key));
+		},
+		[fulfilled, mounted, pending, rejected]
+	);
+	const registerValidating = useCallback(
+		(key: string) => {
+			if (!mounted.current[key]) return; // halt if the component unmounted in mid of the API call
+			setValidating(pending.concat(key));
+		},
+		[mounted, pending]
+	);
+	const registerRejected = useCallback(
+		(key: { id: string; reason: string }) => {
+			if (!mounted.current[key.id]) return; // halt if the component unmounted in mid of the API call
+			setRejected([key, ...rejected]);
+			setValidating(validating.filter((p) => key.id !== p));
+			setPending(pending.filter((req) => req !== key.id));
+		},
+		[mounted, pending, rejected, validating]
+	);
+	const registerFulfilled = useCallback(
+		(key: fulfilled) => {
+			console.log(mounted, key);
+			if (!mounted.current[key.id]) return; // halt if the component unmounted in mid of the API call
+			setFulfilled([key, ...fulfilled]);
+			setValidating(validating.filter((p) => key.id !== p));
+			setPending(pending.filter((req) => req !== key.id));
+		},
+		[fulfilled, mounted, pending, validating]
+	);
 	const contextValue = useMemo(
 		() => ({
 			addToGlobalLoaderBlackList: (key: string) => {
@@ -94,7 +110,7 @@ export const SwrPlusProvider = ({ children }: { children: ReactNode }) => {
 			removeFromGlobalErrorBlackList: (key: string) => {
 				setGlobalErrorBlackList((state) => ({ ...state, [key]: false }));
 			},
-			mounted,
+			mounted: mounted.current,
 			pending,
 			fulfilled,
 			rejected,
@@ -110,7 +126,22 @@ export const SwrPlusProvider = ({ children }: { children: ReactNode }) => {
 			validating,
 			registerValidating,
 		}),
-		[]
+		[
+			mounted,
+			pending,
+			fulfilled,
+			rejected,
+			globalLoaderBlackList,
+			globalErrorBlackList,
+			registerMount,
+			unregisterMount,
+			registerPending,
+			registerRejected,
+			registerFulfilled,
+			store,
+			validating,
+			registerValidating,
+		]
 	);
 	return <SwrPlusContext.Provider value={contextValue}>{children}</SwrPlusContext.Provider>;
 };

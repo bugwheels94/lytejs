@@ -39,7 +39,9 @@ export const useQuery = (
 	const [isValidating, setIsValidating] = useState(false);
 	const keyResult = typeof key === 'function' ? key() : key;
 	const actualKey = Array.isArray(keyResult) ? keyResult : [keyResult];
-	const hash = useMemo(() => (keyResult ? stableValueHash(actualKey) : null), useDeepCompareMemoize(actualKey));
+	const temp = useDeepCompareMemoize(actualKey);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const hash = useMemo(() => (keyResult ? stableValueHash(actualKey) : null), temp);
 	const swrPlus = useContext(SwrPlusContext);
 	useEffect(() => {
 		hash && swrPlus.registerMount(hash);
@@ -54,9 +56,11 @@ export const useQuery = (
 	}, [hash, hideGlobalError, hideGlobalLoader]);
 	useEffect(() => {
 		if (!hash) return;
+		const mounted = swrPlus.mounted[hash];
+		if (!mounted) return;
 		(async () => {
-			const mounted = swrPlus.mounted[hash];
-			const { pending, validating } = swrPlus;
+			const validating = swrPlus.validating;
+			const pending = swrPlus.pending;
 			if (pending.includes(hash)) {
 				setIsPending(true);
 				return;
@@ -78,6 +82,7 @@ export const useQuery = (
 			try {
 				const data = await fetch();
 				// setData(data);
+				await new Promise((resolve) => setTimeout(resolve, 2000));
 				onSuccess(data);
 				hash && swrPlus.registerFulfilled({ id: hash, data });
 				setIsResolved(true);
@@ -88,14 +93,20 @@ export const useQuery = (
 				setIsResolved(true);
 			}
 		})();
-	}, [hash]);
-	const _isPending = useMemo(() => isPending && !!hash && swrPlus.pending.includes(hash), [swrPlus.pending]);
-	const _isValidating = useMemo(() => isValidating && !!hash && swrPlus.validating.includes(hash), [swrPlus.validating]);
+	}, [hash, swrPlus.mounted]);
+	const _isPending = useMemo(() => isPending && !!hash && swrPlus.pending.includes(hash), [hash, isPending, swrPlus.pending]);
+	const _isValidating = useMemo(
+		() => isValidating && !!hash && swrPlus.validating.includes(hash),
+		[hash, isValidating, swrPlus.validating]
+	);
 	const fulfilled = useMemo(
 		() => (isResolved && hash ? swrPlus.fulfilled.find((r) => r.id === hash) : null),
-		[swrPlus.fulfilled]
+		[swrPlus.fulfilled, isResolved, hash]
 	);
-	const rejected = useMemo(() => (isResolved && hash ? swrPlus.rejected.find((r) => r.id === hash) : null), [swrPlus.rejected]);
+	const rejected = useMemo(
+		() => (isResolved && hash ? swrPlus.rejected.find((r) => r.id === hash) : null),
+		[hash, isResolved, swrPlus.rejected]
+	);
 	return {
 		data: fulfilled?.data,
 		error: rejected?.reason,
@@ -103,6 +114,9 @@ export const useQuery = (
 		isRejected: !!rejected,
 		isPending: _isPending,
 		isValidating: _isValidating,
-		isIdle: useMemo(() => !isPending && !rejected && !fulfilled, []),
+		isIdle: useMemo(
+			() => !_isPending && !rejected && !fulfilled && !_isValidating,
+			[_isPending, rejected, fulfilled, _isValidating]
+		),
 	};
 };
