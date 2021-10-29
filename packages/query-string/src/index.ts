@@ -6,10 +6,12 @@ export const stringify = (params: obj) =>
 		.map((k) => {
 			const current = params[k];
 			if (current === undefined) return `${k}=`;
-			if (Array.isArray(current))
+			if (Array.isArray(current)) {
+				if (current.length === 0) return `${k}=`;
 				return current
 					.map((param) => `${k}[]=${encodeURIComponent(typeof param === 'object' ? JSON.stringify(param) : param)}`)
 					.join('&');
+			}
 			return `${k}=${encodeURIComponent(typeof current === 'object' ? JSON.stringify(current) : current)}`;
 		})
 		.join('&');

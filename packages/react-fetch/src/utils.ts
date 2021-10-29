@@ -1,20 +1,22 @@
-import { useMemo, useContext } from 'react';
-import { SwrPlusContext } from './provider';
+import { dequal } from 'dequal/lite';
+import React from 'react';
+import { DependencyList } from 'react';
+// import { SwrPlusContext } from './provider';
 
-export const useIsRejected = () => {
-	const swrPlus = useContext(SwrPlusContext);
-	return useMemo(
-		() => swrPlus.rejected.filter(({ id }) => !swrPlus.globalErrorBlackList[id])[0],
-		[swrPlus.globalErrorBlackList, swrPlus.rejected]
-	);
-};
-export const useIsPending = () => {
-	const swrPlus = useContext(SwrPlusContext);
-	return useMemo(
-		() => !!swrPlus.pending.filter((id) => !swrPlus.globalLoaderBlackList[id]).length,
-		[swrPlus.globalLoaderBlackList, swrPlus.pending]
-	);
-};
+// export const useIsRejected = () => {
+// 	const swrPlus = useContext(SwrPlusContext);
+// 	return useMemo(
+// 		() => swrPlus.rejected.filter(({ id }) => !swrPlus.globalErrorBlackList[id])[0],
+// 		[swrPlus.globalErrorBlackList, swrPlus.rejected]
+// 	);
+// };
+// export const useIsPending = () => {
+// 	const swrPlus = useContext(SwrPlusContext);
+// 	return useMemo(
+// 		() => !!swrPlus.pending.filter((id) => !swrPlus.globalLoaderBlackList[id]).length,
+// 		[swrPlus.globalLoaderBlackList, swrPlus.pending]
+// 	);
+// };
 function hasObjectPrototype(o: any): boolean {
 	return Object.prototype.toString.call(o) === '[object Object]';
 }
@@ -52,11 +54,22 @@ export function stableValueHash(value: React.DependencyList): string {
 	return JSON.stringify(value, (_, val) =>
 		isPlainObject(val)
 			? Object.keys(val)
-					.sort()
-					.reduce((result, key) => {
-						result[key] = val[key];
-						return result;
-					}, {} as any)
+				.sort()
+				.reduce((result, key) => {
+					result[key] = val[key];
+					return result;
+				}, {} as any)
 			: val
 	);
+}
+export function useDeepCompareMemoize(value: DependencyList) {
+	const ref = React.useRef<DependencyList>();
+	const signalRef = React.useRef<number>(0);
+
+	if (!dequal(value, ref.current)) {
+		ref.current = value;
+		signalRef.current += 1;
+	}
+
+	return [signalRef.current];
 }

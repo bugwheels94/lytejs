@@ -60,9 +60,9 @@ export default [
 			peerDepsExternal(),
 			...(env === 'production'
 				? [
-						// terser({
-						// 	mangle: { module: true },
-						// }),
+						terser({
+							// mangle: { module: true },
+						}),
 				  ]
 				: []),
 		],
